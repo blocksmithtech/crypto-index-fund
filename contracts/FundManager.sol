@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 /**
  * @title Ownable
@@ -129,12 +129,12 @@ contract FundManager is Ownable, SafeMath {
 
   function getPortfolio()
   public view
-  returns (address[] tokens, uint8[] percs){
+  returns (address[] memory tokens, uint8[] memory percs){
     return (portfoliosTokens[msg.sender], portfoliosPerc[msg.sender]);
   }
 
   // Sets the percentages of tokens on the portfolio
-  function setPortfolio(address[] tokens, uint8[] percs)
+  function setPortfolio(address[] memory tokens, uint8[] memory percs)
   public {
     assert(tokens.length == percs.length);
     uint totalPerc = 0;
