@@ -42,7 +42,7 @@ contract('FundManager', async (accounts) => {
 
       try {
         await instance.deposit(
-          { value: 2000000000000000000000000000, from: accounts[1] }
+          { value: 200000000000000000000, from: accounts[1] }
         );
       } catch (err) {
         raised = err.message
