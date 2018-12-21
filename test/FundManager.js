@@ -65,16 +65,16 @@ contract('FundManager', async (accounts) => {
 
       let response = await instance.getPortfolio.call();
       assert.equal(
-        response[0][0].toLowerCase(),
+        response[0][0],
         '0x0000000000000000000000000000000000000000',
       );
       assert.equal(
-        response[0][1].toLowerCase(),
-        '0x04e3bb06dc39f2edcb073dad327fcc13ed40d280',
+        response[0][1],
+        '0x04e3bb06DC39f2edCB073DAD327fCc13ed40d280',
       );
       assert.equal(
-        response[0][2].toLowerCase(),
-        '0x04e3bb06dc39f2edcb073dad327fcc13ed40d281'
+        response[0][2],
+        '0x04E3bB06DC39F2EDcB073daD327FCC13ED40D281'
       );
 
       assert.equal(response[1][0].valueOf(), 50);
