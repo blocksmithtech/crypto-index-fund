@@ -51,4 +51,36 @@ contract('FundManager', async (accounts) => {
     });
   });
 
+  describe('setPortfolio and setPortfolio', () => {
+    it('set Portfolio', async () => {
+      let instance = await FundManager.deployed();
+      await instance.setPortfolio(
+        [
+          '0x0000000000000000000000000000000000000000',
+          '0x04e3bb06dc39f2edcb073dad327fcc13ed40d280',
+          '0x04e3bb06dc39f2edcb073dad327fcc13ed40d281'
+        ],
+        [50, 25, 25]
+      );
+
+      let response = await instance.getPortfolio.call();
+      assert.equal(
+        response[0][0],
+        '0x0000000000000000000000000000000000000000',
+      );
+      assert.equal(
+        response[0][1],
+        '0x04e3bb06dc39f2edcb073dad327fcc13ed40d280',
+      );
+      assert.equal(
+        response[0][2],
+        '0x04e3bb06dc39f2edcb073dad327fcc13ed40d281'
+      );
+
+      assert.equal(response[1][0].valueOf(), 50);
+      assert.equal(response[1][1].valueOf(), 25);
+      assert.equal(response[1][2].valueOf(), 25);
+    });
+  });
+
 });

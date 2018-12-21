@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.4.24;
 
 /**
  * @title Ownable
@@ -93,16 +93,12 @@ contract SafeMath {
 contract FundManager is Ownable, SafeMath {
 
   address public exchangeAddress; // address to EtherDelta, etc
-  // stores the portfolios for each wallet
-  // example:
-  // {
-  //   0xabc-address => {
-  //     0xabc-ETH => 50,
-  //     0xabc-BAT => 25,
-  //     0xabc-TRX => 25
-  //   }, ...
-  // }
-  mapping (address => mapping (address => uint8)) public portfolios;
+
+  // address 0x0 means Ether
+  mapping (address => address[]) portfoliosTokens;
+  // percentages must go from 0 to 100, the sum must be 100
+  mapping (address => uint8[]) portfoliosPerc;
+
   mapping (address => uint256) balances;
 
   event Deposit(address sender, uint amount, uint balance);
@@ -131,10 +127,24 @@ contract FundManager is Ownable, SafeMath {
     emit Withdraw(msg.sender, amount, balances[msg.sender]);
   }
 
-  // Sets the percentage of a token on the portfolio
-  // if perc is zero, it gets removed
-  // function setPortfolioEntry (address token, uint8 perc) public {
-  // }
+  function getPortfolio()
+  public view
+  returns (address[] tokens, uint8[] percs){
+    return (portfoliosTokens[msg.sender], portfoliosPerc[msg.sender]);
+  }
+
+  // Sets the percentages of tokens on the portfolio
+  function setPortfolio(address[] tokens, uint8[] percs)
+  public {
+    assert(tokens.length == percs.length);
+    uint totalPerc = 0;
+    for (uint idx = 0; idx < percs.length; idx++) {
+      totalPerc += percs[idx];
+    }
+    assert(totalPerc == 100);
+    portfoliosTokens[msg.sender] = tokens;
+    portfoliosPerc[msg.sender] = percs;
+  }
 
   // // rebalances this portfolio
   // function rebalance () public {
