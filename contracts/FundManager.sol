@@ -72,18 +72,18 @@ contract Ownable {
 }
 
 contract SafeMath {
-  function safeMul(uint a, uint b) internal returns (uint) {
+  function safeMul(uint a, uint b) internal pure returns (uint) {
     uint c = a * b;
     assert(a == 0 || c / a == b);
     return c;
   }
 
-  function safeSub(uint a, uint b) internal returns (uint) {
+  function safeSub(uint a, uint b) internal pure returns (uint) {
     assert(b <= a);
     return a - b;
   }
 
-  function safeAdd(uint a, uint b) internal returns (uint) {
+  function safeAdd(uint a, uint b) internal pure returns (uint) {
     uint c = a + b;
     assert(c>=a && c>=b);
     return c;
@@ -112,6 +112,7 @@ contract FundManager is Ownable, SafeMath {
 
   function balanceOf(address _owner)
   public
+  view
   returns (uint256 balance) {
     return balances[_owner];
   }
