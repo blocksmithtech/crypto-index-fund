@@ -141,7 +141,7 @@ contract FundManager is Ownable, SafeMath {
     for (uint idx = 0; idx < percs.length; idx++) {
       totalPerc += percs[idx];
     }
-    assert(totalPerc == 100);
+    require(totalPerc == 100, 'Total percentage should add to 100');
     portfoliosTokens[msg.sender] = tokens;
     portfoliosPerc[msg.sender] = percs;
   }

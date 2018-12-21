@@ -51,7 +51,7 @@ contract('FundManager', async (accounts) => {
     });
   });
 
-  describe('setPortfolio and setPortfolio', () => {
+  describe('setPortfolio and getPortfolio', () => {
     it('set Portfolio', async () => {
       let instance = await FundManager.deployed();
       await instance.setPortfolio(
@@ -60,7 +60,7 @@ contract('FundManager', async (accounts) => {
           '0x04e3bb06dc39f2edcb073dad327fcc13ed40d280',
           '0x04e3bb06dc39f2edcb073dad327fcc13ed40d281'
         ],
-        [50, 25, 25]
+        [50, 35, 15]
       );
 
       let response = await instance.getPortfolio.call();
@@ -78,9 +78,46 @@ contract('FundManager', async (accounts) => {
       );
 
       assert.equal(response[1][0].valueOf(), 50);
-      assert.equal(response[1][1].valueOf(), 25);
-      assert.equal(response[1][2].valueOf(), 25);
+      assert.equal(response[1][1].valueOf(), 35);
+      assert.equal(response[1][2].valueOf(), 15);
     });
   });
 
+  describe('fails setPortfolio', () => {
+    it('fails to setPortfolio with less than 100 percent', async () => {
+      let instance = await FundManager.deployed();
+      let raised = '';
+      try {
+        await instance.setPortfolio(
+          [
+            '0x0000000000000000000000000000000000000000',
+            '0x04e3bb06dc39f2edcb073dad327fcc13ed40d280',
+            '0x04e3bb06dc39f2edcb073dad327fcc13ed40d281'
+          ],
+          [50, 35, 10]
+        );
+      } catch (err) {
+        raised = err.message
+      }
+      assert.include(raised, 'Total percentage should add to 100');
+    });
+
+    it('fails to setPortfolio with more than 100 percent', async () => {
+      let instance = await FundManager.deployed();
+      let raised = '';
+      try {
+        await instance.setPortfolio(
+          [
+            '0x0000000000000000000000000000000000000000',
+            '0x04e3bb06dc39f2edcb073dad327fcc13ed40d280',
+            '0x04e3bb06dc39f2edcb073dad327fcc13ed40d281'
+          ],
+          [50, 55, 10]
+        );
+      } catch (err) {
+        raised = err.message
+      }
+      assert.include(raised, 'Total percentage should add to 100');
+    });
+  });
 });
