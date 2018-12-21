@@ -98,6 +98,7 @@ contract FundManager is Ownable, SafeMath {
   mapping (address => address[]) portfoliosTokens;
   // percentages must go from 0 to 100, the sum must be 100
   mapping (address => uint8[]) portfoliosPerc;
+  mapping (address => uint256[]) portfoliosTokenAmounts;
 
   mapping (address => uint256) balances;
 
@@ -138,19 +139,40 @@ contract FundManager is Ownable, SafeMath {
   public {
     assert(tokens.length == percs.length);
     uint totalPerc = 0;
+    address[] storage userTokens = portfoliosTokens[msg.sender]; 
+    uint8[] storage userTokensPerc = portfoliosPerc[msg.sender]; 
+    uint256[] storage userTokenAmounts = portfoliosTokenAmounts[msg.sender]; 
+
+    for (uint i = 0; i < userTokensPerc.length; i++) {
+      userTokensPerc[i] = 0;
+    }
+
     for (uint idx = 0; idx < percs.length; idx++) {
+      userTokens.push(tokens[idx]);
+      userTokensPerc.push(percs[idx]);
+      userTokenAmounts.push(0);
       totalPerc += percs[idx];
     }
     require(totalPerc == 100, 'Total percentage should add to 100');
-    portfoliosTokens[msg.sender] = tokens;
-    portfoliosPerc[msg.sender] = percs;
+    // portfoliosTokens[msg.sender] = userTokens;
+    // portfoliosPerc[msg.sender] = userTokensPerc;
+    // portfoliosTokenAmounts[msg.sender] = userTokenAmounts;
   }
-
-  // // rebalances this portfolio
-  // function rebalance () public {
-  //   // sell if needed
-
-  //   // buy if needed
-  // }
-
 }
+
+//   // // rebalances this portfolio
+//   function rebalance () public {
+//     uint userBalance = balanceOf(msg.sender);
+//     address[] userTokens = portfoliosTokens[msg.sender];
+//     uint8[] userTokensPercentages = portfoliosPerc[msg.sender];
+//     uint256[] userTokensAmount = portfoliosTokenAmounts[msg.sender];
+//     for (uint i = 0; i < userTokens.length; i++) {
+//       // TODO fetch current price of the token
+
+//     }
+//     // sell if needed
+
+
+//     // buy if needed
+//   }
+// }
